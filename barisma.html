@@ -68,10 +68,10 @@
             font-size: 1rem;
             max-width: 300px;
             line-height: 1.4;
-            position: absolute; /* Kaçma mekanizmasının doğru çalışması için sabitlendi */
+            position: absolute;
         }
 
-        /* Tüm ekranı kaplama stili (Son aşama için) */
+        /* Tüm ekranı kaplama stili */
         .full-screen-btn {
             position: fixed !important;
             top: 0 !important;
@@ -136,16 +136,15 @@
             "Okay fine, I won't ask anymore..."
         ];
 
-        // Sadece butonun yerini değiştiren fonksiyon
+        // Sadece butonun ekrandaki yerini değiştiren fonksiyon (Yazıyı ETKİLEMEZ)
         function hayirKac() {
             const hayirButon = document.getElementById('btn-hayir');
             
-            // Eğer tüm yazılar bittiyse artık kaçmasın, ekranı kaplamaya hazır dursun
+            // Son aşamada ekranı kaplamaya hazır durması için artık kaçmasın
             if (tiklamaSayisi >= hayirYazilari.length) {
                 return;
             }
 
-            // Ekran genişliği ve yüksekliğine göre rastgele güvenli koordinatlar
             const x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
             const y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
             
@@ -153,7 +152,7 @@
             hayirButon.style.top = y + "px";
         }
 
-        // Yazıların sırayla değişmesini kontrol eden ana fonksiyon
+        // YALNIZCA TIKLANDIĞINDA aşamayı ve yazıyı değiştiren fonksiyon
         function hayirTiklandi() {
             tiklamaSayisi++;
             
@@ -162,24 +161,24 @@
             const evetButon = document.getElementById('btn-evet');
             const hayirButon = document.getElementById('btn-hayir');
 
-            // Eğer cümleler bittikten sonra bir kez daha basılırsa (9. tıklama) EKRANI KAPLA
+            // 8 yazı bittikten sonraki tıklamada (9. tıklama) ekranı kapla
             if (tiklamaSayisi > hayirYazilari.length) {
                 hayirButon.classList.add('hidden');
                 evetButon.classList.add('full-screen-btn');
                 return;
             }
 
-            // "Yes" butonunu büyüme aşamaları (Tane tane büyür)
+            // Evet butonunu büyütme adımları
             evetPaddingX += 35;
             evetPaddingY += 18;
             evetFontSize += 0.45;
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // "No" butonunun içindeki yazıyı tam olarak sırasına göre değiştirir
+            // Yazıyı tam sırasına göre değiştirir (Asla atlama yapmaz)
             hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
             
-            // Yazı değiştikten hemen sonra yeni bir yere kaçır
+            // Tıklandıktan sonra da hemen kaçır ki tekrar basamasın
             hayirKac();
         }
 
@@ -189,7 +188,6 @@
             document.body.style.backgroundColor = "#e8f8f5";
         }
 
-        // Sayfa ilk açıldığında butonun düzenli durması için ilk konumlandırma
         window.onload = function() {
             const hayirButon = document.getElementById('btn-hayir');
             hayirButon.style.left = "calc(50% + 60px)";
@@ -198,3 +196,4 @@
     </script>
 </body>
 </html>
+
