@@ -12,10 +12,11 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f4f8;
+            background-color: #ffe6e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             text-align: center;
+            transition: background-color 0.5s ease;
         }
 
         .container {
@@ -83,14 +84,14 @@
         </div>
 
         <div class="gif-container">
-            <img id="capoo-animation" src="https://cdna.artstation.com/p/assets/images/images/028/148/188/original/clover-fi-capoo-cry.gif" alt="Hareketli Mavi Capoo">
+            <img id="ana-animasyon" src="Giri%C5%9F.gif" alt="Animasyon">
         </div>
     </div>
 
     <div id="basari-ekrani" class="container hidden">
         <h1 style="color: #2ecc71; font-size: 2.5rem;">Evet diyeceğini biliyordum!<br>Teşekkür Ederim ❤️</h1>
         <div class="gif-container">
-            <img src="https://cdna.artstation.com/p/assets/images/images/028/148/182/original/clover-fi-capoo-heart.gif" alt="Mutlu Capoo">
+            <img src="Son%20giri%C5%9F.gif" alt="Mutlu Son">
         </div>
     </div>
 
@@ -116,7 +117,10 @@
         function hayirTiklandi() {
             tiklamaSayisi++;
             
-            // Evet butonunu devasa yap
+            // Hayır'a basıldığı an görseli Çöp kutusu.gif yapar
+            document.getElementById('ana-animasyon').src = "%C3%87%C3%B6p%20kutusu.gif";
+            
+            // Evet butonunu büyütür
             evetPaddingX += 30;
             evetPaddingY += 15;
             evetFontSize += 0.4;
@@ -124,7 +128,7 @@
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // Hayır butonunu küçült
+            // Hayır butonunu küçültür
             if (hayirFontSize > 0.4) {
                 hayirPaddingX -= 2;
                 hayirPaddingY -= 1;
@@ -134,7 +138,6 @@
                 hayirButon.style.fontSize = hayirFontSize + "rem";
             }
 
-            // Üstteki kırmızı mesajı değiştir
             const mesajElementi = document.getElementById('mesaj');
             if(tiklamaSayisi <= mesajlar.length) {
                 mesajElementi.innerText = mesajlar[tiklamaSayisi - 1];
