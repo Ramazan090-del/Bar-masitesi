@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Please Forgive Me :(</title>
+    
+    <title>Can We Start Talking Again, Shall We Make Up?</title>
+    <meta property="og:title" content="Can We Start Talking Again, Shall We Make Up?" />
+    <meta property="og:description" content="Please take a look..." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ramazan090-del.github.io/Bar-masitesi/barisma.html" />
+
     <style>
         body {
             margin: 0;
@@ -62,6 +68,7 @@
             font-size: 1rem;
             max-width: 300px;
             line-height: 1.4;
+            position: relative;
         }
 
         /* Tüm ekranı kaplama stili (Son aşama için) */
@@ -97,7 +104,7 @@
         
         <div class="buttons">
             <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
-            <button id="btn-hayir" onclick="hayirTiklandi()">No</button>
+            <button id="btn-hayir" onclick="hayirTiklandi()" onmouseover="hayirKac()">No</button>
         </div>
 
         <div class="gif-container">
@@ -118,7 +125,6 @@
         let evetPaddingY = 20;
         let evetFontSize = 1.8;
         
-        // İngilizceye çevrilmiş ikna cümleleri listesi
         const hayirYazilari = [
             "Are you sure?",
             "Are you really sure??",
@@ -130,33 +136,50 @@
             "Okay fine, I won't ask anymore..."
         ];
 
+        // Butonun rastgele kaçmasını sağlayan fonksiyon
+        function hayirKac() {
+            const hayirButon = document.getElementById('btn-hayir');
+            
+            // Eğer buton son aşamada ekranı kaplayacaksa artık kaçmasın
+            if (tiklamaSayisi >= hayirYazilari.length) {
+                hayirButon.style.position = "static";
+                return;
+            }
+
+            hayirButon.style.position = "fixed";
+            
+            // Ekran genişliği ve yüksekliğine göre rastgele koordinatlar hesaplar
+            const x = Math.random() * (window.innerWidth - hayirButon.clientWidth);
+            const y = Math.random() * (window.innerHeight - hayirButon.clientHeight);
+            
+            hayirButon.style.left = x + "px";
+            hayirButon.style.top = y + "px";
+        }
+
         function hayirTiklandi() {
             tiklamaSayisi++;
             
-            // Görsel Çöp kutusu.gif olur
             document.getElementById('ana-animasyon').src = "%C3%87%C3%B6p%20kutusu.gif";
             
             const evetButon = document.getElementById('btn-evet');
             const hayirButon = document.getElementById('btn-hayir');
 
-            // Eğer cümleler bittikten sonra tekrar Hayır'a basılırsa (Son Aşama)
             if (tiklamaSayisi > hayirYazilari.length) {
-                // Hayır butonunu tamamen yok et
                 hayirButon.classList.add('hidden');
-                // Evet (Yes) butonuna tüm ekranı kaplatma sınıfını ekle
                 evetButon.classList.add('full-screen-btn');
                 return;
             }
 
-            // Normal büyüme aşamaları
             evetPaddingX += 35;
             evetPaddingY += 18;
             evetFontSize += 0.45;
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // Kırmızı butonun üstündeki yazıyı sırayla İngilizce olarak değiştirir
             hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
+            
+            // Tıklandığında da hemen başka bir yere kaçsın
+            hayirKac();
         }
 
         function evetTiklandi() {
@@ -167,4 +190,3 @@
     </script>
 </body>
 </html>
-
