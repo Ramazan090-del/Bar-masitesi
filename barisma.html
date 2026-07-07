@@ -85,10 +85,18 @@
             align-items: center !important;
         }
 
+        .gif-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
         .gif-container img {
             width: 220px;
             height: auto;
-            margin-bottom: 10px;
+            object-fit: contain; /* Resmin kırpılmasını önler, çerçeveye sığdırır */
         }
 
         .hidden {
@@ -115,62 +123,4 @@
         <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you</h1>
         <div class="gif-container">
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
-        </div>
-    </div>
-
-    <script>
-        let tiklamaSayisi = 0;
-        let evetPaddingX = 40;
-        let evetPaddingY = 20;
-        let evetFontSize = 1.8;
-        
-        const hayirYazilari = [
-            "Are you sure?",
-            "Are you really sure??",
-            "Can you say you are absolutely sure?",
-            "Please think about it once more!",
-            "I'll be very sad if you say no...",
-            "I'll be really sad...",
-            "I'll be very, very sad...",
-            "Okay fine, I won't ask anymore..."
-        ];
-
-        function hayirTiklandi() {
-            tiklamaSayisi++;
             
-            const anaGif = document.getElementById('ana-animasyon');
-            const evetButon = document.getElementById('btn-evet');
-            const hayirButon = document.getElementById('btn-hayir');
-
-            if (tiklamaSayisi > hayirYazilari.length) {
-                hayirButon.classList.add('hidden');
-                evetButon.classList.add('full-screen-btn');
-                return;
-            }
-
-            // GIF Dönüşüm Matematiksel Mantığı
-            if (tiklamaSayisi % 2 !== 0) {
-                // Tıklama sayısı tek ise (1, 3, 5, 7)
-                anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
-            } else {
-                // Tıklama sayısı çift ise (2, 4, 6, 8)
-                anaGif.src = "Ikinci%20%C3%87%C3%B6p%20kutusu.gif";
-            }
-
-            evetPaddingX += 35;
-            evetPaddingY += 18;
-            evetFontSize += 0.45;
-            evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
-            evetButon.style.fontSize = evetFontSize + "rem";
-
-            hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
-        }
-
-        function evetTiklandi() {
-            document.getElementById('soru-ekrani').classList.add('hidden');
-            document.getElementById('basari-ekrani').classList.remove('hidden');
-            document.body.style.backgroundColor = "#e8f8f5";
-        }
-    </script>
-</body>
-</html>
