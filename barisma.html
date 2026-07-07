@@ -60,6 +60,7 @@
             color: white;
             padding: 20px 40px;
             font-size: 1.8rem;
+            z-index: 20;
         }
 
         #btn-hayir {
@@ -69,6 +70,8 @@
             font-size: 1rem;
             max-width: 300px;
             line-height: 1.4;
+            position: fixed; /* Ekranda tamamen özgürce konumlanması için */
+            z-index: 30;
         }
 
         .full-screen-btn {
@@ -143,6 +146,34 @@
             "Okay fine, I won't ask anymore..."
         ];
 
+        // "No" butonunu "Yes" butonuna değmeyecek şekilde tamamen rastgele bir konuma gönderen fonksiyon
+        function hayirKacir() {
+            const hayirButon = document.getElementById('btn-hayir');
+            const evetButon = document.getElementById('btn-evet');
+            
+            if (tiklamaSayisi >= hayirYazilari.length) return;
+
+            const evetRect = evetButon.getBoundingClientRect();
+            let x, y, kesisiyor mu;
+
+            // "Yes" butonuyla üst üste binmeyene kadar rastgele koordinat aramaya devam eder
+            do {
+                x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
+                y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
+
+                // "Yes" butonunun etrafına ekstra 50 piksel güvenli mesafe koyar
+                kesisiyor mu = (
+                    x < evetRect.right + 50 &&
+                    x + hayirButon.clientWidth > evetRect.left - 50 &&
+                    y < evetRect.bottom + 50 &&
+                    y + hayirButon.clientHeight > evetRect.top - 50
+                );
+            } while (kesisiyor mu);
+
+            hayirButon.style.left = x + "px";
+            hayirButon.style.top = y + "px";
+        }
+
         function hayirTiklandi() {
             tiklamaSayisi++;
             
@@ -156,7 +187,6 @@
                 return;
             }
 
-            // Dosya ismi tam olarak "İkinci Çöp kutusu.gif" formatına uyarlandı
             if (tiklamaSayisi % 2 !== 0) {
                 anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
             } else {
@@ -170,6 +200,9 @@
             evetButon.style.fontSize = evetFontSize + "rem";
 
             hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
+
+            // Tıklandığı an yeni bir güvenli rastgele konuma ışınla
+            hayirKacir();
         }
 
         function evetTiklandi() {
@@ -177,6 +210,11 @@
             document.getElementById('basari-ekrani').classList.remove('hidden');
             document.body.style.backgroundColor = "#e8f8f5";
         }
+
+        // Sayfa İLK AÇILDIĞINDA da "No" butonu direkt rastgele bir yerde başlasın
+        window.onload = function() {
+            hayirKacir();
+        };
     </script>
 </body>
 </html>
