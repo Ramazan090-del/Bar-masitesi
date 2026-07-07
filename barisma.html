@@ -3,14 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Can We Start Talking Again, Shall We Make Up?</title>
-    
-    <meta property="og:title" content="Can We Start Talking Again, Shall We Make Up?" />
-    <meta property="og:description" content="Please take a look..." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://ramazan090-del.github.io/Bar-masitesi/barisma.html" />
-
+    <title>Can We Start Talking Again</title>
     <style>
         body {
             margin: 0;
@@ -45,7 +38,7 @@
             gap: 20px;
             margin-top: 20px;
             min-height: 150px;
-            position: relative; /* İlk başta butonların düzenli durması için */
+            position: relative;
         }
 
         button {
@@ -146,25 +139,21 @@
             "Okay fine, I won't ask anymore..."
         ];
 
-        // "No" butonunu yeşil "Yes" butonuna asla değmeyecek şekilde tamamen rastgele bir konuma gönderen fonksiyon
         function hayirKacir() {
             const hayirButon = document.getElementById('btn-hayir');
             const evetButon = document.getElementById('btn-evet');
             
             if (tiklamaSayisi >= hayirYazilari.length) return;
 
-            // İlk basışta butonu serbest bırakıp ekranda uçurabilmek için fixed yapıyoruz
             hayirButon.style.position = 'fixed';
 
             const evetRect = evetButon.getBoundingClientRect();
             let x, y, kesisiyorMu;
 
-            // Yeşil butonla üst üste binmeyene kadar yeni koordinat arar
             do {
                 x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
                 y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
 
-                // Yeşil butonun çevresine 60 piksel güvenlik mesafesi koyar
                 kesisiyorMu = (
                     x < evetRect.right + 60 &&
                     x + hayirButon.clientWidth > evetRect.left - 60 &&
@@ -204,7 +193,6 @@
 
             hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
 
-            // Tıklandıktan hemen sonra yeşil alandan uzak, güvenli bir yere kaçırır
             hayirKacir();
         }
 
