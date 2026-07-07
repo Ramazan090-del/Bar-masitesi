@@ -78,7 +78,7 @@
 <body>
 
     <div id="soru-ekrani" class="container">
-        <h1 id="mesaj">Seni Üzdüğüm İçin Özür Dilerim.<br>Barışalım Mı?</h1>
+        <h1>Seni Üzdüğüm İçin Özür Dilerim.<br>Barışalım Mı?</h1>
         
         <div class="buttons">
             <button id="btn-evet" onclick="evetTiklandi()">Evet</button>
@@ -107,7 +107,7 @@
         let hayirPaddingY = 10;
         let hayirFontSize = 1;
         
-        // Videodaki kırmızı butonun sırayla söylediği yazılar
+        // Sadece kırmızı butonun üstünde sırayla çıkacak yazılar
         const hayirYazilari = [
             "Emin misin?",
             "Gerçekten emin misin??",
@@ -133,12 +133,12 @@
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // Sadece kırmızı butonun üstündeki yazıyı değiştirir
+            // SADECE kırmızı butonun üstündeki yazıyı değiştirir
             const hayirButon = document.getElementById('btn-hayir');
             if(tiklamaSayisi <= hayirYazilari.length) {
                 hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
             } else {
-                // Yazılar bitince butonu gizler
+                // Yazılar tamamen bitince kırmızı butonu gizler
                 hayirButon.classList.add('hidden');
             }
         }
