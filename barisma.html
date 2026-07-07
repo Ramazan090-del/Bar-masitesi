@@ -45,6 +45,7 @@
             gap: 20px;
             margin-top: 20px;
             min-height: 150px;
+            position: relative; /* İlk başta butonların düzenli durması için */
         }
 
         button {
@@ -70,7 +71,6 @@
             font-size: 1rem;
             max-width: 300px;
             line-height: 1.4;
-            position: fixed; /* Ekranda tamamen özgürce konumlanması için */
             z-index: 30;
         }
 
@@ -87,134 +87,4 @@
             justify-content: center !important;
             align-items: center !important;
         }
-
-        .gif-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .gif-container img {
-            width: 220px;
-            height: auto;
-            object-fit: contain;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="soru-ekrani" class="container">
-        <h1>Can We Start Talking Again,<br>Shall We Make Up?</h1>
         
-        <div class="buttons">
-            <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
-            <button id="btn-hayir" onclick="hayirTiklandi()">No</button>
-        </div>
-
-        <div class="gif-container">
-            <img id="ana-animasyon" src="Giri%C5%9F.gif" alt="Animation">
-        </div>
-    </div>
-
-    <div id="basari-ekrani" class="container hidden">
-        <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you</h1>
-        <div class="gif-container">
-            <img src="Son%20giri%C5%9F.gif" alt="Happy End">
-        </div>
-    </div>
-
-    <script>
-        let tiklamaSayisi = 0;
-        let evetPaddingX = 40;
-        let evetPaddingY = 20;
-        let evetFontSize = 1.8;
-        
-        const hayirYazilari = [
-            "Are you sure?",
-            "Are you really sure??",
-            "Can you say you are absolutely sure?",
-            "Please think about it once more!",
-            "I'll be very sad if you say no...",
-            "I'll be really sad...",
-            "I'll be very, very sad...",
-            "Okay fine, I won't ask anymore..."
-        ];
-
-        // "No" butonunu "Yes" butonuna değmeyecek şekilde tamamen rastgele bir konuma gönderen fonksiyon
-        function hayirKacir() {
-            const hayirButon = document.getElementById('btn-hayir');
-            const evetButon = document.getElementById('btn-evet');
-            
-            if (tiklamaSayisi >= hayirYazilari.length) return;
-
-            const evetRect = evetButon.getBoundingClientRect();
-            let x, y, kesisiyor mu;
-
-            // "Yes" butonuyla üst üste binmeyene kadar rastgele koordinat aramaya devam eder
-            do {
-                x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
-                y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
-
-                // "Yes" butonunun etrafına ekstra 50 piksel güvenli mesafe koyar
-                kesisiyor mu = (
-                    x < evetRect.right + 50 &&
-                    x + hayirButon.clientWidth > evetRect.left - 50 &&
-                    y < evetRect.bottom + 50 &&
-                    y + hayirButon.clientHeight > evetRect.top - 50
-                );
-            } while (kesisiyor mu);
-
-            hayirButon.style.left = x + "px";
-            hayirButon.style.top = y + "px";
-        }
-
-        function hayirTiklandi() {
-            tiklamaSayisi++;
-            
-            const anaGif = document.getElementById('ana-animasyon');
-            const evetButon = document.getElementById('btn-evet');
-            const hayirButon = document.getElementById('btn-hayir');
-
-            if (tiklamaSayisi > hayirYazilari.length) {
-                hayirButon.classList.add('hidden');
-                evetButon.classList.add('full-screen-btn');
-                return;
-            }
-
-            if (tiklamaSayisi % 2 !== 0) {
-                anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
-            } else {
-                anaGif.src = "%C4%B0kinci%20%C3%87%C3%B6p%20kutusu.gif";
-            }
-
-            evetPaddingX += 35;
-            evetPaddingY += 18;
-            evetFontSize += 0.45;
-            evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
-            evetButon.style.fontSize = evetFontSize + "rem";
-
-            hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
-
-            // Tıklandığı an yeni bir güvenli rastgele konuma ışınla
-            hayirKacir();
-        }
-
-        function evetTiklandi() {
-            document.getElementById('soru-ekrani').classList.add('hidden');
-            document.getElementById('basari-ekrani').classList.remove('hidden');
-            document.body.style.backgroundColor = "#e8f8f5";
-        }
-
-        // Sayfa İLK AÇILDIĞINDA da "No" butonu direkt rastgele bir yerde başlasın
-        window.onload = function() {
-            hayirKacir();
-        };
-    </script>
-</body>
-</html>
