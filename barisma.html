@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beni Affet :(</title>
+    <title>Please Forgive Me :(</title>
     <style>
         body {
             margin: 0;
@@ -45,7 +45,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: padding 0.2s ease, font-size 0.2s ease;
         }
 
         #btn-evet {
@@ -64,6 +64,21 @@
             line-height: 1.4;
         }
 
+        /* Tüm ekranı kaplama stili (Son aşama için) */
+        .full-screen-btn {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            font-size: 8rem !important;
+            border-radius: 0 !important;
+            z-index: 9999 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
         .gif-container img {
             width: 220px;
             height: auto;
@@ -78,22 +93,22 @@
 <body>
 
     <div id="soru-ekrani" class="container">
-        <h1>Seni Üzdüğüm İçin Özür Dilerim.<br>Barışalım Mı?</h1>
+        <h1>Can We Start Talking Again,<br>Shall We Make Up?</h1>
         
         <div class="buttons">
-            <button id="btn-evet" onclick="evetTiklandi()">Evet</button>
-            <button id="btn-hayir" onclick="hayirTiklandi()">Hayır</button>
+            <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
+            <button id="btn-hayir" onclick="hayirTiklandi()">No</button>
         </div>
 
         <div class="gif-container">
-            <img id="ana-animasyon" src="Giri%C5%9F.gif" alt="Animasyon">
+            <img id="ana-animasyon" src="Giri%C5%9F.gif" alt="Animation">
         </div>
     </div>
 
     <div id="basari-ekrani" class="container hidden">
-        <h1 style="color: #2ecc71; font-size: 2.5rem;">Evet diyeceğini biliyordum!<br>Teşekkür Ederim ❤️</h1>
+        <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you</h1>
         <div class="gif-container">
-            <img src="Son%20giri%C5%9F.gif" alt="Mutlu Son">
+            <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
     </div>
 
@@ -103,20 +118,16 @@
         let evetPaddingY = 20;
         let evetFontSize = 1.8;
         
-        let hayirPaddingX = 20;
-        let hayirPaddingY = 10;
-        let hayirFontSize = 1;
-        
-        // Sadece kırmızı butonun üstünde sırayla çıkacak yazılar
+        // İngilizceye çevrilmiş ikna cümleleri listesi
         const hayirYazilari = [
-            "Emin misin?",
-            "Gerçekten emin misin??",
-            "Tam olarak emin olduğunu söyleyebilir misin?",
-            "Tabi daha düşün lütfen!",
-            "Hayır dersen çok üzülürüm...",
-            "Gerçekten çok üzülürüm...",
-            "Çok ama çok üzülürüm...",
-            "Peki tamam, artık sormayacağım..."
+            "Are you sure?",
+            "Are you really sure??",
+            "Can you say you are absolutely sure?",
+            "Please think about it once more!",
+            "I'll be very sad if you say no...",
+            "I'll be really sad...",
+            "I'll be very, very sad...",
+            "Okay fine, I won't ask anymore..."
         ];
 
         function hayirTiklandi() {
@@ -125,22 +136,27 @@
             // Görsel Çöp kutusu.gif olur
             document.getElementById('ana-animasyon').src = "%C3%87%C3%B6p%20kutusu.gif";
             
-            // Evet butonunu büyütür
+            const evetButon = document.getElementById('btn-evet');
+            const hayirButon = document.getElementById('btn-hayir');
+
+            // Eğer cümleler bittikten sonra tekrar Hayır'a basılırsa (Son Aşama)
+            if (tiklamaSayisi > hayirYazilari.length) {
+                // Hayır butonunu tamamen yok et
+                hayirButon.classList.add('hidden');
+                // Evet (Yes) butonuna tüm ekranı kaplatma sınıfını ekle
+                evetButon.classList.add('full-screen-btn');
+                return;
+            }
+
+            // Normal büyüme aşamaları
             evetPaddingX += 35;
             evetPaddingY += 18;
             evetFontSize += 0.45;
-            const evetButon = document.getElementById('btn-evet');
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // SADECE kırmızı butonun üstündeki yazıyı değiştirir
-            const hayirButon = document.getElementById('btn-hayir');
-            if(tiklamaSayisi <= hayirYazilari.length) {
-                hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
-            } else {
-                // Yazılar tamamen bitince kırmızı butonu gizler
-                hayirButon.classList.add('hidden');
-            }
+            // Kırmızı butonun üstündeki yazıyı sırayla İngilizce olarak değiştirir
+            hayirButon.innerText = hayirYazilari[tiklamaSayisi - 1];
         }
 
         function evetTiklandi() {
