@@ -138,8 +138,7 @@
         function hayirTiklandi() {
             tiklamaSayisi++;
             
-            document.getElementById('ana-animasyon').src = "%C3%87%C3%B6p%20kutusu.gif";
-            
+            const anaGif = document.getElementById('ana-animasyon');
             const evetButon = document.getElementById('btn-evet');
             const hayirButon = document.getElementById('btn-hayir');
 
@@ -147,6 +146,15 @@
                 hayirButon.classList.add('hidden');
                 evetButon.classList.add('full-screen-btn');
                 return;
+            }
+
+            // GIF Dönüşüm Matematiksel Mantığı
+            if (tiklamaSayisi % 2 !== 0) {
+                // Tıklama sayısı tek ise (1, 3, 5, 7)
+                anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
+            } else {
+                // Tıklama sayısı çift ise (2, 4, 6, 8)
+                anaGif.src = "Ikinci%20%C3%87%C3%B6p%20kutusu.gif";
             }
 
             evetPaddingX += 35;
