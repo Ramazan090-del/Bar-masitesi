@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Can We Start Talking Again</title>
+    
+    <title>Can We Start Talking Again, Shall We Make Up?</title>
+    
+    <meta property="og:title" content="Can We Start Talking Again, Shall We Make Up?" />
+    <meta property="og:description" content="Please take a look..." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ramazan090-del.github.io/Bar-masitesi/barisma.html" />
+
     <style>
         body {
             margin: 0;
@@ -98,6 +105,54 @@
         .hidden {
             display: none !important;
         }
+
+        /* Sağ Alttaki Sürpriz Kutu Tasarımı */
+        .surpriz-kutusu {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            user-select: none;
+            transition: transform 0.3s ease;
+            animation: hafifYayla 2s infinite ease-in-out;
+        }
+
+        .surpriz-kutusu:hover {
+            transform: scale(1.2);
+        }
+
+        /* Kutunun içinden çıkan mesaj balonu */
+        .kutu-mesaji {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background-color: #ffffff;
+            color: #d63031;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 12px 18px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            white-space: nowrap;
+            border: 2px solid #ffb3b3;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .kutu-mesaji.goster {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        @keyframes hafifYayla {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
     </style>
 </head>
 <body>
@@ -115,11 +170,18 @@
         </div>
     </div>
 
+    <!-- Başarı ekranında teşekkürlerin yanına Zilan eklendi -->
     <div id="basari-ekrani" class="container hidden">
-        <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you</h1>
+        <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you, Zilan</h1>
         <div class="gif-container">
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
+    </div>
+
+    <!-- Sağ Alt Köşedeki Sürpriz Kutu Yapısı -->
+    <div class="surpriz-kutusu" onclick="kutuAc()">
+        <span id="kutu-emoji">🎁</span>
+        <div id="kutu-metni" class="kutu-mesaji">Can We Follow Each Other Again?</div>
     </div>
 
     <script>
@@ -138,6 +200,20 @@
             "I'll be very, very sad...",
             "Okay fine, I won't ask anymore..."
         ];
+
+        // Sürpriz kutuyu açıp kapatan fonksiyon
+        function kutuAc() {
+            const mesaj = document.getElementById('kutu-metni');
+            const emoji = document.getElementById('kutu-emoji');
+            
+            if (mesaj.classList.contains('goster')) {
+                mesaj.classList.remove('goster');
+                emoji.innerText = "🎁";
+            } else {
+                mesaj.classList.add('goster');
+                emoji.innerText = "💝";
+            }
+        }
 
         function hayirKacir() {
             const hayirButon = document.getElementById('btn-hayir');
