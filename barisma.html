@@ -106,22 +106,26 @@
             display: none !important;
         }
 
-        /* Normal sürpriz kutu konumu */
+        /* Ortadaki sürpriz kutunun kapsayıcı alanı */
+        .ortadaki-kutu-alani {
+            position: relative;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        /* Başarı ekranında ortada çıkacak sürpriz kutu */
         .surpriz-kutusu {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 2.5rem;
+            font-size: 3rem;
             cursor: pointer;
-            z-index: 1000;
             user-select: none;
         }
 
-        /* İstediğin şık ve düz iç kutu mesajı tasarımı */
+        /* Sürpriz kutunun içinden açılan İngilizce yazı tasarımı */
         .kutu-mesaji {
             position: absolute;
-            bottom: 65px;
-            right: 0;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
             background: white;
             color: #d63031;
             padding: 12px 18px;
@@ -155,12 +159,12 @@
         <div class="gif-container">
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
-    </div>
 
-    <!-- Sürpriz Kutusu ve İngilizce İç Kutusu -->
-    <div class="surpriz-kutusu" onclick="toggleKutu()">
-        🎁
-        <div id="kutu-metni" class="kutu-mesaji">Can we follow each other again, Zilan?</div>
+        <!-- Evet'e basınca burada ortada belirecek olan Sürpriz Kutu -->
+        <div class="ortadaki-kutu-alani">
+            <div class="surpriz-kutusu" onclick="toggleKutu()">🎁</div>
+            <div id="kutu-metni" class="kutu-mesaji">Can we follow each other again, Zilan?</div>
+        </div>
     </div>
 
     <script>
