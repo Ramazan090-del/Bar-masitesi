@@ -106,9 +106,15 @@
             display: none !important;
         }
 
-        /* Sürpriz kutu stili */
-        .surpriz-kutu {
-            position: fixed; bottom: 20px; right: 20px; font-size: 2rem; cursor: pointer; z-index: 1000;
+        /* Normal sürpriz kutu konumu */
+        .surpriz-kutusu {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            user-select: none;
         }
     </style>
 </head>
@@ -128,15 +134,16 @@
     </div>
 
     <div id="basari-ekrani" class="container hidden">
-        <!-- Zilan eklendi -->
-        <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you, Zilan</h1>
+        <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you</h1>
         <div class="gif-container">
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
     </div>
 
-    <!-- Sürpriz kutu eklendi -->
-    <div class="surpriz-kutu" onclick="alert('Tekrar takipleşebilirmiyiz')">🎁</div>
+    <!-- Düz, normal sürpriz kutusu emojisi -->
+    <div class="surpriz-kutusu" onclick="alert('Tekrar takipleşebilirmiyiz Zilan')">
+        🎁
+    </div>
 
     <script>
         let tiklamaSayisi = 0;
