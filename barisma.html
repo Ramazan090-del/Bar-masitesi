@@ -116,6 +116,23 @@
             z-index: 1000;
             user-select: none;
         }
+
+        /* İstediğin şık ve düz iç kutu mesajı tasarımı */
+        .kutu-mesaji {
+            position: absolute;
+            bottom: 65px;
+            right: 0;
+            background: white;
+            color: #d63031;
+            padding: 12px 18px;
+            border-radius: 10px;
+            display: none;
+            border: 2px solid #d63031;
+            font-weight: bold;
+            font-size: 1rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -134,16 +151,16 @@
     </div>
 
     <div id="basari-ekrani" class="container hidden">
-        <!-- Zilan ismi buradan tamamen silindi, orijinal haline döndü -->
         <h1 style="color: #2ecc71; font-size: 2.5rem;">I knew you would say yes!<br>Thank you</h1>
         <div class="gif-container">
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
     </div>
 
-    <!-- Düz, normal sürpriz kutusu emojisi (Zilan ismi tam sonuna eklendi) -->
-    <div class="surpriz-kutusu" onclick="alert('Tekrar takipleşebilirmiyiz Zilan')">
+    <!-- Sürpriz Kutusu ve İngilizce İç Kutusu -->
+    <div class="surpriz-kutusu" onclick="toggleKutu()">
         🎁
+        <div id="kutu-metni" class="kutu-mesaji">Can we follow each other again, Zilan?</div>
     </div>
 
     <script>
@@ -162,6 +179,15 @@
             "I'll be very, very sad...",
             "Okay fine, I won't ask anymore..."
         ];
+
+        function toggleKutu() {
+            const kutuMetni = document.getElementById('kutu-metni');
+            if (kutuMetni.style.display === 'block') {
+                kutuMetni.style.display = 'none';
+            } else {
+                kutuMetni.style.display = 'block';
+            }
+        }
 
         function hayirKacir() {
             const hayirButon = document.getElementById('btn-hayir');
@@ -228,4 +254,3 @@
     </script>
 </body>
 </html>
-
