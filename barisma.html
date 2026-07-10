@@ -23,17 +23,15 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Arka plana şık bir sahil görseli eklendi ve ortalandı */
-            background: linear-gradient(rgba(255, 230, 230, 0.4), rgba(255, 230, 230, 0.4)), 
-                        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop') no-repeat center center/cover;
+            background-color: #ffe6e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             text-align: center;
             position: relative;
-            transition: background 1s ease; /* Evet deyince arka planın yumuşakça değişmesi için */
+            transition: background-color 1s ease;
         }
 
-        /* Dokunma/Tıklama ile yayılan dalga grafiği */
+        /* Dokunma dalga efekti */
         .dokunma-dalgasi {
             position: absolute;
             border: 2px solid rgba(214, 48, 49, 0.4);
@@ -50,7 +48,7 @@
             100% { width: 120px; height: 120px; opacity: 0; }
         }
 
-        /* Sinematik Giriş Perde Grafiği */
+        /* Sinematik Giriş Perdesi */
         .perde-katmani {
             position: fixed;
             top: 0;
@@ -59,34 +57,25 @@
             height: 100vh;
             background-color: #d63031;
             z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: perdeAcilma 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+            animation: perdeAcilma 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
             pointer-events: none;
         }
 
         @keyframes perdeAcilma {
             0% { transform: scaleX(1); opacity: 1; }
-            60% { opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0; display: none; }
+            80% { opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; visibility: hidden; }
         }
 
-        /* İçeriklerin sahil üzerinde daha net okunması için beyaz şeffaf kart */
         .container {
-            max-width: 550px;
-            width: 90%;
-            padding: 30px;
+            max-width: 600px;
+            padding: 20px;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 20px;
-            backdrop-filter: blur(5px); /* Arka planı hafif buzlu cam yapar */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             color: #d63031;
-            font-size: 2.3rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
             min-height: 4rem;
         }
@@ -104,18 +93,25 @@
         button {
             font-weight: bold;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             transition: padding 0.2s ease, font-size 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
+        /* Sadece 2. Madde: "Yes" Butonuna Nabız (Kalp Atışı) Titreme Grafiği */
         #btn-evet {
             background-color: #2ecc71;
             color: white;
             padding: 20px 40px;
             font-size: 1.8rem;
             z-index: 20;
+            animation: butonNabiz 1.5s infinite ease-in-out;
+        }
+
+        @keyframes butonNabiz {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+            50% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(46, 204, 113, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
         }
 
         #btn-hayir {
@@ -154,7 +150,6 @@
             width: 220px;
             height: auto;
             object-fit: contain;
-            border-radius: 10px;
         }
 
         .hidden {
@@ -186,5 +181,183 @@
             display: none;
             border: 2px solid #d63031;
             font-weight: bold;
-            font-size
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 90%;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: pre-wrap; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="perde-katmani"></div>
+
+    <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
+
+    <div id="soru-ekrani" class="container">
+        <h1 id="ana-baslik"></h1>
+        
+        <div class="buttons">
+            <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
+            <button id="btn-hayir" onclick="hayirTiklandi()">No</button>
+        </div>
+
+        <div class="gif-container">
+            <img id="ana-animasyon" src="Giri%C5%9F.gif" alt="Animation">
+        </div>
+    </div>
+
+    <div id="basari-ekrani" class="container hidden">
+        <h1 id="basari-baslik" style="color: #2ecc71; font-size: 2.5rem; white-space: pre-line;"></h1>
+        <div class="gif-container">
+            <img src="Son%20giri%C5%9F.gif" alt="Happy End">
+        </div>
+
+        <div class="ortadaki-kutu-alani">
+            <div id="kutu-metni" class="kutu-mesaji"></div>
+            <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()">🎁</div>
+        </div>
+    </div>
+
+    <script>
+        let tiklamaSayisi = 0;
+        let evetPaddingX = 40;
+        let evetPaddingY = 20;
+        let evetFontSize = 1.8;
+        
+        const baslikMetni = "Shall We Make Up?";
+        const basariMetni = "I knew you would say yes!\nThank you";
+        const tamMetin = "Can we follow each other again, Zilan?";
+        
+        const hayirYazilari = [
+            "Are you sure?",
+            "Are you really sure??",
+            "Can you say you are absolutely sure?",
+            "Please think about it once more!",
+            "I'll be very sad if you say no...",
+            "I'll be really sad...",
+            "I'll be very, very sad...",
+            "Okay fine, I won't ask anymore..."
+        ];
+
+        // Tıklama dalga efekti
+        window.addEventListener('click', function(e) {
+            const dalga = document.createElement('div');
+            dalga.classList.add('dokunma-dalgasi');
+            dalga.style.left = e.pageX + 'px';
+            dalga.style.top = e.pageY + 'px';
+            document.body.appendChild(dalga);
+
+            setTimeout(() => { dalga.remove(); }, 600);
+        });
+
+        function harfHarfYaz(elementId, metin, hiz, callback) {
+            const element = document.getElementById(elementId);
+            if(!element) return;
+            element.textContent = "";
+            let i = 0;
+            function yaz() {
+                if (i < metin.length) {
+                    element.textContent += metin.charAt(i);
+                    i++;
+                    setTimeout(yaz, hiz);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            yaz();
+        }
+
+        window.onload = function() {
+            setTimeout(() => {
+                harfHarfYaz("ana-baslik", baslikMetni, 70);
+            }, 800);
+        };
+
+        function yaziEfektiBaslat() {
+            const kutuMetni = document.getElementById('kutu-metni');
+            if (kutuMetni.style.display === 'block') {
+                kutuMetni.style.display = 'none';
+                kutuMetni.textContent = "";
+                return;
+            }
+            kutuMetni.style.display = 'block';
+            harfHarfYaz("kutu-metni", tamMetin, 50);
+        }
+
+        function hayirKacir() {
+            const hayirButon = document.getElementById('btn-hayir');
+            const evetButon = document.getElementById('btn-evet');
             
+            if (tiklamaSayisi >= hayirYazilari.length) return;
+
+            hayirButon.style.position = 'fixed';
+            const evetRect = evetButon.getBoundingClientRect();
+            let x, y, kesisiyorMu;
+
+            do {
+                x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
+                y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
+
+                kesisiyorMu = (
+                    x < evetRect.right + 60 &&
+                    x + hayirButon.clientWidth > evetRect.left - 60 &&
+                    y < evetRect.bottom + 60 &&
+                    y + hayirButon.clientHeight > evetRect.top - 60
+                );
+            } while (kesisiyorMu);
+
+            hayirButon.style.left = x + "px";
+            hayirButon.style.top = y + "px";
+        }
+
+        function hayirTiklandi() {
+            tiklamaSayisi++;
+            const anaGif = document.getElementById('ana-animasyon');
+            const evetButon = document.getElementById('btn-evet');
+            const hayirButon = document.getElementById('btn-hayir');
+
+            if (tiklamaSayisi > hayirYazilari.length) {
+                hayirButon.classList.add('hidden');
+                evetButon.classList.add('full-screen-btn');
+                return;
+            }
+
+            if (tiklamaSayisi % 2 !== 0) {
+                anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
+            } else {
+                anaGif.src = "%C4%B0kinci%20%C3%87%C3%B6p%20kutusu.gif";
+            }
+
+            evetPaddingX += 35;
+            evetPaddingY += 18;
+            evetFontSize += 0.45;
+            evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
+            evetButon.style.fontSize = evetFontSize + "rem";
+
+            harfHarfYaz("btn-hayir", hayirYazilari[tiklamaSayisi - 1], 30);
+            hayirKacir();
+        }
+
+        function evetTiklandi() {
+            document.getElementById('soru-ekrani').classList.add('hidden');
+            document.getElementById('basari-ekrani').classList.remove('hidden');
+            document.body.style.backgroundColor = "#e8f8f5";
+            
+            harfHarfYaz("basari-baslik", basariMetni, 60);
+
+            const muzik = document.getElementById('arkaPlanMuzik');
+            muzik.play().catch(error => {
+                console.log("Müzik engellendi: ", error);
+            });
+
+            setTimeout(() => {
+                muzik.pause();
+                muzik.currentTime = 0;
+            }, 15000);
+        }
+    </script>
+</body>
+</html>
