@@ -48,23 +48,52 @@
             100% { width: 120px; height: 120px; opacity: 0; }
         }
 
-        /* Sinematik Giriş Perdesi */
-        .perde-katmani {
+        /* GERÇEKÇİ KADİFE PERDE SİSTEMİ (ORTADAN İKİYE AÇILIR) */
+        .perde-kutusu {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #d63031;
             z-index: 99999;
-            animation: perdeAcilma 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
             pointer-events: none;
+            display: flex;
         }
 
-        @keyframes perdeAcilma {
+        /* Sol ve Sağ Kanatlar için Ortak Kadife Kumaş Efekti */
+        .perde-kanat {
+            width: 50vw;
+            height: 100vh;
+            /* Dikey çizgiler ve gölgelerle kumaş kıvrımı hissi veriyoruz */
+            background: linear-gradient(90deg, 
+                #8b0000 0%, #b22222 15%, #8b0000 30%, 
+                #b22222 45%, #d63031 60%, #b22222 75%, 
+                #8b0000 90%, #5c0000 100%);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.6);
+            transition: transform 1.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Sol kanat sola, sağ kanat sağa büzülecek */
+        .sol-perde {
+            transform-origin: left center;
+            animation: solPerdeAcilma 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .sag-perde {
+            transform-origin: right center;
+            animation: sagPerdeAcilma 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes solPerdeAcilma {
             0% { transform: scaleX(1); opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0; visibility: hidden; }
+            70% { opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+
+        @keyframes sagPerdeAcilma {
+            0% { transform: scaleX(1); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
         }
 
         .container {
@@ -98,7 +127,7 @@
             transition: padding 0.2s ease, font-size 0.2s ease;
         }
 
-        /* Sadece 2. Madde: "Yes" Butonuna Nabız (Kalp Atışı) Titreme Grafiği */
+        /* "Yes" Butonu Kalp Atışı Grafiği */
         #btn-evet {
             background-color: #2ecc71;
             color: white;
@@ -192,7 +221,10 @@
 </head>
 <body>
 
-    <div class="perde-katmani"></div>
+    <div class="perde-kutusu">
+        <div class="perde-kanat sol-perde"></div>
+        <div class="perde-kanat sag-perde"></div>
+    </div>
 
     <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
 
@@ -271,6 +303,7 @@
         }
 
         window.onload = function() {
+            // Perde açılmaya başlarken arkadaki yazı efekti senkronize başlasın
             setTimeout(() => {
                 harfHarfYaz("ana-baslik", baslikMetni, 70);
             }, 800);
@@ -361,3 +394,4 @@
     </script>
 </body>
 </html>
+
