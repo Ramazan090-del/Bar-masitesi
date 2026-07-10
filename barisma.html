@@ -141,6 +141,9 @@
 </head>
 <body>
 
+    <!-- Dosya ismi tamamen küçük harf olarak güncellendi -->
+    <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
+
     <div id="soru-ekrani" class="container">
         <h1>Shall We Make Up?</h1>
         
@@ -271,6 +274,17 @@
             document.getElementById('soru-ekrani').classList.add('hidden');
             document.getElementById('basari-ekrani').classList.remove('hidden');
             document.body.style.backgroundColor = "#e8f8f5";
+            
+            const muzik = document.getElementById('arkaPlanMuzik');
+            muzik.play().catch(error => {
+                console.log("Müzik otomatik oynatılamadı, tarayıcı engeli: ", error);
+            });
+
+            // 15 saniye sonra müziği durdurur ve başa sarar
+            setTimeout(() => {
+                muzik.pause();
+                muzik.currentTime = 0;
+            }, 15000);
         }
     </script>
 </body>
