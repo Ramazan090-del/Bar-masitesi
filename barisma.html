@@ -13,7 +13,6 @@
 
     <style>
         * {
-            /* İmleç takibi ve dalga efektinin buton tıklamalarını engellememesi için */
             box-sizing: border-box;
         }
 
@@ -24,36 +23,31 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #ffe6e6;
+            /* Arka plana şık bir sahil görseli eklendi ve ortalandı */
+            background: linear-gradient(rgba(255, 230, 230, 0.4), rgba(255, 230, 230, 0.4)), 
+                        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop') no-repeat center center/cover;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             text-align: center;
             position: relative;
+            transition: background 1s ease; /* Evet deyince arka planın yumuşakça değişmesi için */
         }
 
-        /* 3. Madde: Dokunma/Tıklama ile yayılan dalga grafiği */
+        /* Dokunma/Tıklama ile yayılan dalga grafiği */
         .dokunma-dalgasi {
             position: absolute;
             border: 2px solid rgba(214, 48, 49, 0.4);
             border-radius: 50%;
             background-color: rgba(255, 182, 193, 0.3);
-            pointer-events: none; /* Altındaki elementlerin tıklanmasını engellemez */
+            pointer-events: none;
             transform: translate(-50%, -50%);
             animation: dalgaGenisle 0.6s ease-out forwards;
             z-index: 999999;
         }
 
         @keyframes dalgaGenisle {
-            0% {
-                width: 0px;
-                height: 0px;
-                opacity: 1;
-            }
-            100% {
-                width: 120px;
-                height: 120px;
-                opacity: 0;
-            }
+            0% { width: 0px; height: 0px; opacity: 1; }
+            100% { width: 120px; height: 120px; opacity: 0; }
         }
 
         /* Sinematik Giriş Perde Grafiği */
@@ -78,15 +72,21 @@
             100% { transform: scaleX(0); opacity: 0; display: none; }
         }
 
+        /* İçeriklerin sahil üzerinde daha net okunması için beyaz şeffaf kart */
         .container {
-            max-width: 600px;
-            padding: 20px;
+            max-width: 550px;
+            width: 90%;
+            padding: 30px;
             z-index: 10;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            backdrop-filter: blur(5px); /* Arka planı hafif buzlu cam yapar */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             color: #d63031;
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             margin-bottom: 20px;
             min-height: 4rem;
         }
@@ -104,9 +104,10 @@
         button {
             font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             transition: padding 0.2s ease, font-size 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         #btn-evet {
@@ -153,6 +154,7 @@
             width: 220px;
             height: auto;
             object-fit: contain;
+            border-radius: 10px;
         }
 
         .hidden {
@@ -184,188 +186,5 @@
             display: none;
             border: 2px solid #d63031;
             font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 90%;
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: pre-wrap; 
-        }
-    </style>
-</head>
-<body>
-
-    <div class="perde-katmani"></div>
-
-    <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
-
-    <!-- Soru Ekranı -->
-    <div id="soru-ekrani" class="container">
-        <h1 id="ana-baslik"></h1>
-        
-        <div class="buttons">
-            <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
-            <button id="btn-hayir" onclick="hayirTiklandi()">No</button>
-        </div>
-
-        <div class="gif-container">
-            <img id="ana-animasyon" src="Giri%C5%9F.gif" alt="Animation">
-        </div>
-    </div>
-
-    <!-- Başarı Ekranı -->
-    <div id="basari-ekrani" class="container hidden">
-        <h1 id="basari-baslik" style="color: #2ecc71; font-size: 2.5rem; white-space: pre-line;"></h1>
-        <div class="gif-container">
-            <img src="Son%20giri%C5%9F.gif" alt="Happy End">
-        </div>
-
-        <div class="ortadaki-kutu-alani">
-            <div id="kutu-metni" class="kutu-mesaji"></div>
-            <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()">🎁</div>
-        </div>
-    </div>
-
-    <script>
-        let tiklamaSayisi = 0;
-        let evetPaddingX = 40;
-        let evetPaddingY = 20;
-        let evetFontSize = 1.8;
-        
-        const baslikMetni = "Shall We Make Up?";
-        const basariMetni = "I knew you would say yes!\nThank you";
-        const tamMetin = "Can we follow each other again, Zilan?";
-        
-        const hayirYazilari = [
-            "Are you sure?",
-            "Are you really sure??",
-            "Can you say you are absolutely sure?",
-            "Please think about it once more!",
-            "I'll be very sad if you say no...",
-            "I'll be really sad...",
-            "I'll be very, very sad...",
-            "Okay fine, I won't ask anymore..."
-        ];
-
-        // 3. Madde: Tıklama/Dokunma dalga efekti oluşturucu JavaScript kodu
-        window.addEventListener('click', function(e) {
-            // Perde tamamen açılmadan dalga çıkmasın diye küçük kontrol
-            const dalga = document.createElement('div');
-            dalga.classList.add('dokunma-dalgasi');
-            dalga.style.left = e.pageX + 'px';
-            dalga.style.top = e.pageY + 'px';
-            document.body.appendChild(dalga);
-
-            // Animasyon bittiğinde elementi silerek hafızayı temizler
-            setTimeout(() => {
-                dalga.remove();
-            }, 600);
-        });
-
-        function harfHarfYaz(elementId, metin, hiz, callback) {
-            const element = document.getElementById(elementId);
-            element.textContent = "";
-            let i = 0;
-            function yaz() {
-                if (i < metin.length) {
-                    element.textContent += metin.charAt(i);
-                    i++;
-                    setTimeout(yaz, hiz);
-                } else if (callback) {
-                    callback();
-                }
-            }
-            yaz();
-        }
-
-        window.onload = function() {
-            setTimeout(() => {
-                harfHarfYaz("ana-baslik", baslikMetni, 70);
-            }, 600);
-        };
-
-        function yaziEfektiBaslat() {
-            const kutuMetni = document.getElementById('kutu-metni');
-            if (kutuMetni.style.display === 'block') {
-                kutuMetni.style.display = 'none';
-                kutuMetni.textContent = "";
-                return;
-            }
-            kutuMetni.style.display = 'block';
-            harfHarfYaz("kutu-metni", tamMetin, 50);
-        }
-
-        function hayirKacir() {
-            const hayirButon = document.getElementById('btn-hayir');
-            const evetButon = document.getElementById('btn-evet');
+            font-size
             
-            if (tiklamaSayisi >= hayirYazilari.length) return;
-
-            hayirButon.style.position = 'fixed';
-            const evetRect = evetButon.getBoundingClientRect();
-            let x, y, kesisiyorMu;
-
-            do {
-                x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
-                y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
-
-                kesisiyorMu = (
-                    x < evetRect.right + 60 &&
-                    x + hayirButon.clientWidth > evetRect.left - 60 &&
-                    y < evetRect.bottom + 60 &&
-                    y + hayirButon.clientHeight > evetRect.top - 60
-                );
-            } while (kesisiyorMu);
-
-            hayirButon.style.left = x + "px";
-            hayirButon.style.top = y + "px";
-        }
-
-        function hayirTiklandi() {
-            tiklamaSayisi++;
-            const anaGif = document.getElementById('ana-animasyon');
-            const evetButon = document.getElementById('btn-evet');
-            const hayirButon = document.getElementById('btn-hayir');
-
-            if (tiklamaSayisi > hayirYazilari.length) {
-                hayirButon.classList.add('hidden');
-                evetButon.classList.add('full-screen-btn');
-                return;
-            }
-
-            if (tiklamaSayisi % 2 !== 0) {
-                anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
-            } else {
-                anaGif.src = "%C4%B0kinci%20%C3%87%C3%B6p%20kutusu.gif";
-            }
-
-            evetPaddingX += 35;
-            evetPaddingY += 18;
-            evetFontSize += 0.45;
-            evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
-            evetButon.style.fontSize = evetFontSize + "rem";
-
-            harfHarfYaz("btn-hayir", hayirYazilari[tiklamaSayisi - 1], 30);
-            hayirKacir();
-        }
-
-        function evetTiklandi() {
-            document.getElementById('soru-ekrani').classList.add('hidden');
-            document.getElementById('basari-ekrani').classList.remove('hidden');
-            document.body.style.backgroundColor = "#e8f8f5";
-            
-            harfHarfYaz("basari-baslik", basariMetni, 60);
-
-            const muzik = document.getElementById('arkaPlanMuzik');
-            muzik.play().catch(error => {
-                console.log("Müzik otomatik oynatılamadı: ", error);
-            });
-
-            setTimeout(() => {
-                muzik.pause();
-                muzik.currentTime = 0;
-            }, 15000);
-        }
-    </script>
-</body>
-</html>
