@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Can We Start Talking Again, Shall We Make Up?</title>
+    <title>Shall We Make Up?</title>
     
-    <meta property="og:title" content="Can We Start Talking Again, Shall We Make Up?" />
+    <meta property="og:title" content="Shall We Make Up?" />
     <meta property="og:description" content="Please take a look..." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ramazan090-del.github.io/Bar-masitesi/barisma.html" />
@@ -34,7 +34,7 @@
 
         h1 {
             color: #d63031;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
         }
 
@@ -106,21 +106,19 @@
             display: none !important;
         }
 
-        /* Ortadaki sürpriz kutunun kapsayıcı alanı */
         .ortadaki-kutu-alani {
             position: relative;
             display: inline-block;
             margin-top: 15px;
         }
 
-        /* Başarı ekranında ortada çıkacak sürpriz kutu */
         .surpriz-kutusu {
             font-size: 3rem;
             cursor: pointer;
             user-select: none;
         }
 
-        /* Sürpriz kutunun içinden açılan İngilizce yazı tasarımı */
+        /* Yazı efekti için hazırlanan kutu */
         .kutu-mesaji {
             position: absolute;
             bottom: 75px;
@@ -142,7 +140,7 @@
 <body>
 
     <div id="soru-ekrani" class="container">
-        <h1>Can We Start Talking Again,<br>Shall We Make Up?</h1>
+        <h1>Shall We Make Up?</h1>
         
         <div class="buttons">
             <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
@@ -160,10 +158,9 @@
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
 
-        <!-- Evet'e basınca burada ortada belirecek olan Sürpriz Kutu -->
         <div class="ortadaki-kutu-alani">
-            <div class="surpriz-kutusu" onclick="toggleKutu()">🎁</div>
-            <div id="kutu-metni" class="kutu-mesaji">Can we follow each other again, Zilan?</div>
+            <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()">🎁</div>
+            <div id="kutu-metni" class="kutu-mesaji"></div>
         </div>
     </div>
 
@@ -172,6 +169,7 @@
         let evetPaddingX = 40;
         let evetPaddingY = 20;
         let evetFontSize = 1.8;
+        const tamMetin = "Can we follow each other again, Zilan?";
         
         const hayirYazilari = [
             "Are you sure?",
@@ -184,13 +182,26 @@
             "Okay fine, I won't ask anymore..."
         ];
 
-        function toggleKutu() {
+        function yaziEfektiBaslat() {
             const kutuMetni = document.getElementById('kutu-metni');
+            
             if (kutuMetni.style.display === 'block') {
                 kutuMetni.style.display = 'none';
-            } else {
-                kutuMetni.style.display = 'block';
+                kutuMetni.innerText = "";
+                return;
             }
+
+            kutuMetni.style.display = 'block';
+            kutuMetni.innerText = "";
+            let i = 0;
+            function yaz() {
+                if (i < tamMetin.length) {
+                    kutuMetni.innerText += tamMetin.charAt(i);
+                    i++;
+                    setTimeout(yaz, 60); // Hız ayarı: 60ms
+                }
+            }
+            yaz();
         }
 
         function hayirKacir() {
