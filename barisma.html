@@ -107,33 +107,55 @@
         }
 
         .ortadaki-kutu-alani {
-            position: relative;
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             margin-top: 15px;
+            position: relative;
+            width: 100%;
         }
 
         .surpriz-kutusu {
             font-size: 3rem;
             cursor: pointer;
             user-select: none;
+            margin-top: 10px;
         }
 
-        /* Yazı efekti için hazırlanan kutu */
         .kutu-mesaji {
-            position: absolute;
-            bottom: 75px;
-            left: 50%;
-            transform: translateX(-50%);
             background: white;
             color: #d63031;
-            padding: 12px 18px;
-            border-radius: 10px;
+            padding: 12px 20px;
+            border-radius: 12px;
             display: none;
             border: 2px solid #d63031;
             font-weight: bold;
-            font-size: 1rem;
-            white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 90%;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: pre-wrap; 
+        }
+
+        /* Konfeti Parçacıklarının CSS Kodları */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            z-index: 1;
+            opacity: 0.8;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+            }
         }
     </style>
 </head>
@@ -159,8 +181,8 @@
         </div>
 
         <div class="ortadaki-kutu-alani">
-            <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()">🎁</div>
             <div id="kutu-metni" class="kutu-mesaji"></div>
+            <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()">🎁</div>
         </div>
     </div>
 
@@ -169,7 +191,9 @@
         let evetPaddingX = 40;
         let evetPaddingY = 20;
         let evetFontSize = 1.8;
+        
         const tamMetin = "Can we follow each other again, Zilan?";
+        let yaziZamanlayici; 
         
         const hayirYazilari = [
             "Are you sure?",
@@ -187,18 +211,20 @@
             
             if (kutuMetni.style.display === 'block') {
                 kutuMetni.style.display = 'none';
-                kutuMetni.innerText = "";
+                kutuMetni.textContent = "";
+                clearTimeout(yaziZamanlayici);
                 return;
             }
 
             kutuMetni.style.display = 'block';
-            kutuMetni.innerText = "";
+            kutuMetni.textContent = "";
             let i = 0;
+            
             function yaz() {
                 if (i < tamMetin.length) {
-                    kutuMetni.innerText += tamMetin.charAt(i);
+                    kutuMetni.textContent += tamMetin.charAt(i);
                     i++;
-                    setTimeout(yaz, 60); // Hız ayarı: 60ms
+                    yaziZamanlayici = setTimeout(yaz, 50);
                 }
             }
             yaz();
@@ -261,12 +287,34 @@
             hayirKacir();
         }
 
+        // Konfeti Oluşturma Fonksiyonu
+        function konfetiPatlat() {
+            const renkler = ['#d63031', '#2ecc71', '#f1c40f', '#3498db', '#9b59b6', '#e67e22'];
+            for (let i = 0; i < 100; i++) {
+                const konfeti = document.createElement('div');
+                konfeti.classList.add('confetti');
+                
+                // Rastgele konum, renk ve hız ayarları
+                konfeti.style.left = Math.random() * 100 + 'vw';
+                konfeti.style.backgroundColor = renkler[Math.floor(Math.random() * renkler.length)];
+                konfeti.style.animationDuration = (Math.random() * 2 + 2) + 's'; 
+                konfeti.style.animationDelay = Math.random() * 1 + 's';
+                
+                document.body.appendChild(konfeti);
+
+                // Ekran dışına çıkan konfetileri temizle
+                setTimeout(() => {
+                    konfeti.remove();
+                }, 4000);
+            }
+        }
+
         function evetTiklandi() {
             document.getElementById('soru-ekrani').classList.add('hidden');
             document.getElementById('basari-ekrani').classList.remove('hidden');
             document.body.style.backgroundColor = "#e8f8f5";
+            konfetiPatlat(); // Başarı ekranında konfetileri başlatır
         }
     </script>
 </body>
 </html>
-
