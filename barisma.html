@@ -124,9 +124,6 @@
         <div class="perde-kanat sag-perde"></div>
     </div>
 
-    <!-- Müzik Dosyan -->
-    <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
-
     <div id="soru-ekrani" class="container">
         <h1 id="ana-baslik"></h1>
         <div class="buttons">
@@ -155,7 +152,6 @@
         const basariMetni = "I knew you would say yes!\nThank you";
         const tamMetin = "Can we follow each other again, Zilan?";
         
-        // Hayır butonunun yazıları
         const hayirYazilari = [
             "Are you sure?",
             "Are you really sure??",
@@ -167,7 +163,6 @@
             "Okay fine, I won't ask anymore..."
         ];
 
-        // Perde tamamen açıldıktan sonra ana başlık başlasın
         window.onload = function() {
             setTimeout(() => {
                 harfHarfYaz("ana-baslik", baslikMetni, 70);
@@ -264,21 +259,8 @@
             document.getElementById('soru-ekrani').classList.add('hidden');
             document.getElementById('basari-ekrani').classList.remove('hidden');
             document.body.style.backgroundColor = "#e8f8f5";
-            
             harfHarfYaz("basari-baslik", basariMetni, 60);
-
-            // Müzik çalma mekanizması
-            const muzik = document.getElementById('arkaPlanMuzik');
-            muzik.play().catch(error => {
-                console.log("Müzik engellendi: ", error);
-            });
-
-            setTimeout(() => {
-                muzik.pause();
-                muzik.currentTime = 0;
-            }, 15000);
         }
     </script>
 </body>
 </html>
-
