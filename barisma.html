@@ -12,6 +12,11 @@
     <meta property="og:url" content="https://ramazan090-del.github.io/Bar-masitesi/barisma.html" />
 
     <style>
+        * {
+            /* İmleç takibi ve dalga efektinin buton tıklamalarını engellememesi için */
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -23,6 +28,32 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             text-align: center;
+            position: relative;
+        }
+
+        /* 3. Madde: Dokunma/Tıklama ile yayılan dalga grafiği */
+        .dokunma-dalgasi {
+            position: absolute;
+            border: 2px solid rgba(214, 48, 49, 0.4);
+            border-radius: 50%;
+            background-color: rgba(255, 182, 193, 0.3);
+            pointer-events: none; /* Altındaki elementlerin tıklanmasını engellemez */
+            transform: translate(-50%, -50%);
+            animation: dalgaGenisle 0.6s ease-out forwards;
+            z-index: 999999;
+        }
+
+        @keyframes dalgaGenisle {
+            0% {
+                width: 0px;
+                height: 0px;
+                opacity: 1;
+            }
+            100% {
+                width: 120px;
+                height: 120px;
+                opacity: 0;
+            }
         }
 
         /* Sinematik Giriş Perde Grafiği */
@@ -57,7 +88,7 @@
             color: #d63031;
             font-size: 2.5rem;
             margin-bottom: 20px;
-            min-height: 4rem; /* Yazı yazılırken alanın kaymaması için */
+            min-height: 4rem;
         }
 
         .buttons {
@@ -168,8 +199,11 @@
 
     <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
 
+    <!-- Soru Ekranı -->
     <div id="soru-ekrani" class="container">
-        <h1 id="ana-baslik"></h1> <div class="buttons">
+        <h1 id="ana-baslik"></h1>
+        
+        <div class="buttons">
             <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
             <button id="btn-hayir" onclick="hayirTiklandi()">No</button>
         </div>
@@ -179,8 +213,10 @@
         </div>
     </div>
 
+    <!-- Başarı Ekranı -->
     <div id="basari-ekrani" class="container hidden">
-        <h1 id="basari-baslik" style="color: #2ecc71; font-size: 2.5rem; white-space: pre-line;"></h1> <div class="gif-container">
+        <h1 id="basari-baslik" style="color: #2ecc71; font-size: 2.5rem; white-space: pre-line;"></h1>
+        <div class="gif-container">
             <img src="Son%20giri%C5%9F.gif" alt="Happy End">
         </div>
 
@@ -196,7 +232,6 @@
         let evetPaddingY = 20;
         let evetFontSize = 1.8;
         
-        // Metinler
         const baslikMetni = "Shall We Make Up?";
         const basariMetni = "I knew you would say yes!\nThank you";
         const tamMetin = "Can we follow each other again, Zilan?";
@@ -212,7 +247,21 @@
             "Okay fine, I won't ask anymore..."
         ];
 
-        // Genel harf harf yazdırma fonksiyonu
+        // 3. Madde: Tıklama/Dokunma dalga efekti oluşturucu JavaScript kodu
+        window.addEventListener('click', function(e) {
+            // Perde tamamen açılmadan dalga çıkmasın diye küçük kontrol
+            const dalga = document.createElement('div');
+            dalga.classList.add('dokunma-dalgasi');
+            dalga.style.left = e.pageX + 'px';
+            dalga.style.top = e.pageY + 'px';
+            document.body.appendChild(dalga);
+
+            // Animasyon bittiğinde elementi silerek hafızayı temizler
+            setTimeout(() => {
+                dalga.remove();
+            }, 600);
+        });
+
         function harfHarfYaz(elementId, metin, hiz, callback) {
             const element = document.getElementById(elementId);
             element.textContent = "";
@@ -229,24 +278,19 @@
             yaz();
         }
 
-        // Sayfa ilk yüklendiğinde ana başlığı yazdır
         window.onload = function() {
             setTimeout(() => {
                 harfHarfYaz("ana-baslik", baslikMetni, 70);
-            }, 600); // Perde açılırken yazmaya başlasın
+            }, 600);
         };
 
-        // Kutucuğa basınca soruyu yazdıran fonksiyon
-        let kutuZamanlayici;
         function yaziEfektiBaslat() {
             const kutuMetni = document.getElementById('kutu-metni');
-            
             if (kutuMetni.style.display === 'block') {
                 kutuMetni.style.display = 'none';
                 kutuMetni.textContent = "";
                 return;
             }
-
             kutuMetni.style.display = 'block';
             harfHarfYaz("kutu-metni", tamMetin, 50);
         }
@@ -279,7 +323,6 @@
 
         function hayirTiklandi() {
             tiklamaSayisi++;
-            
             const anaGif = document.getElementById('ana-animasyon');
             const evetButon = document.getElementById('btn-evet');
             const hayirButon = document.getElementById('btn-hayir');
@@ -302,9 +345,7 @@
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // No butonunun üzerindeki yeni metni de harf harf yazdırır
             harfHarfYaz("btn-hayir", hayirYazilari[tiklamaSayisi - 1], 30);
-
             hayirKacir();
         }
 
@@ -313,12 +354,11 @@
             document.getElementById('basari-ekrani').classList.remove('hidden');
             document.body.style.backgroundColor = "#e8f8f5";
             
-            // Başarı ekranı açıldığında teşekkür yazısını otomatik harf harf yazar
             harfHarfYaz("basari-baslik", basariMetni, 60);
 
             const muzik = document.getElementById('arkaPlanMuzik');
             muzik.play().catch(error => {
-                console.log("Müzik otomatik oynatılamadı, tarayıcı engeli: ", error);
+                console.log("Müzik otomatik oynatılamadı: ", error);
             });
 
             setTimeout(() => {
@@ -329,4 +369,3 @@
     </script>
 </body>
 </html>
-
