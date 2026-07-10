@@ -19,11 +19,10 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #ffe6e6; /* Başlangıç rengi: Tatlı pembe */
+            background-color: #ffe6e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             text-align: center;
-            transition: background-color 0.8s ease; /* Arka plan renk geçişini yumuşatır */
         }
 
         .container {
@@ -36,7 +35,6 @@
             color: #d63031;
             font-size: 2.5rem;
             margin-bottom: 20px;
-            transition: color 0.5s ease;
         }
 
         .buttons {
@@ -117,21 +115,11 @@
             width: 100%;
         }
 
-        /* 2. Madde: Kalp Atışı (Heartbeat) Animasyonlu Sürpriz Kutusu */
         .surpriz-kutusu {
-            font-size: 3.5rem;
+            font-size: 3rem;
             cursor: pointer;
             user-select: none;
             margin-top: 10px;
-            animation: heartbeat 1.2s infinite ease-in-out;
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.1); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.1); }
-            70% { transform: scale(1); }
         }
 
         .kutu-mesaji {
@@ -154,7 +142,7 @@
 <body>
 
     <div id="soru-ekrani" class="container">
-        <h1 id="ana-baslik">Shall We Make Up?</h1>
+        <h1>Shall We Make Up?</h1>
         
         <div class="buttons">
             <button id="btn-evet" onclick="evetTiklandi()">Yes</button>
@@ -196,11 +184,6 @@
             "I'll be really sad...",
             "I'll be very, very sad...",
             "Okay fine, I won't ask anymore..."
-        ];
-
-        /* 1. Madde: Hayır butonuna basıldıkça kararacak arka plan renkleri (Drama Aşamaları) */
-        const kararmaRenkleri = [
-            "#e6cece", "#ccb6b6", "#b39e9e", "#998686", "#806e6e", "#665656", "#4d3e3e", "#261c1c"
         ];
 
         function yaziEfektiBaslat() {
@@ -260,20 +243,11 @@
             const anaGif = document.getElementById('ana-animasyon');
             const evetButon = document.getElementById('btn-evet');
             const hayirButon = document.getElementById('btn-hayir');
-            const anaBaslik = document.getElementById('ana-baslik');
 
             if (tiklamaSayisi > hayirYazilari.length) {
                 hayirButon.classList.add('hidden');
                 evetButon.classList.add('full-screen-btn');
                 return;
-            }
-
-            // 1. Madde: Arka planı adım adım karart ve başlık rengini beyaza yaklaştır
-            if(tiklamaSayisi <= kararmaRenkleri.length) {
-                document.body.style.backgroundColor = kararmaRenkleri[tiklamaSayisi - 1];
-                if(tiklamaSayisi > 4) {
-                    anaBaslik.style.color = "#ffffff";
-                }
             }
 
             if (tiklamaSayisi % 2 !== 0) {
@@ -296,9 +270,8 @@
         function evetTiklandi() {
             document.getElementById('soru-ekrani').classList.add('hidden');
             document.getElementById('basari-ekrani').classList.remove('hidden');
-            document.body.style.backgroundColor = "#e8f8f5"; /* Evet deyince arka plan ferah turkuaz/yeşil olur */
+            document.body.style.backgroundColor = "#e8f8f5";
         }
     </script>
 </body>
 </html>
-
