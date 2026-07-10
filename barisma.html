@@ -43,7 +43,6 @@
 
         .perde-kanat {
             width: 50vw; height: 100vh;
-            /* Derin bordo ve vişne tonlarıyla daha tok kadife dokusu */
             background: linear-gradient(90deg, 
                 #4a0000 0%, #8b0000 20%, #4a0000 40%, 
                 #8b0000 60%, #5c0000 80%, #2a0000 100%);
@@ -52,7 +51,6 @@
 
         .sol-perde {
             transform-origin: left center;
-            /* 3 saniye bekle, 2.5 saniyede yavaşça açıl */
             animation: solPerdeAcilma 2.5s cubic-bezier(0.4, 0, 0.2, 1) 3s forwards;
         }
 
@@ -108,6 +106,9 @@
         .gif-container { display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 10px; }
         .gif-container img { width: 220px; height: auto; object-fit: contain; }
         .hidden { display: none !important; }
+        
+        .ortadaki-kutu-alani { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 15px; position: relative; width: 100%; }
+        
         .kutu-mesaji {
             background: white; color: #d63031; padding: 12px 20px; border-radius: 12px;
             display: none; border: 2px solid #d63031; font-weight: bold; font-size: 1.1rem;
@@ -123,6 +124,7 @@
         <div class="perde-kanat sag-perde"></div>
     </div>
 
+    <!-- Müzik Dosyan -->
     <audio id="arkaPlanMuzik" src="art-deco.mp3" preload="auto"></audio>
 
     <div id="soru-ekrani" class="container">
@@ -137,28 +139,54 @@
     <div id="basari-ekrani" class="container hidden">
         <h1 id="basari-baslik" style="color: #2ecc71; font-size: 2.5rem; white-space: pre-line;"></h1>
         <div class="gif-container"><img src="Son%20giri%C5%9F.gif" alt="Happy End"></div>
-        <div class="kutu-mesaji" id="kutu-metni"></div>
-        <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()" style="font-size: 3rem; cursor: pointer;">🎁</div>
+        <div class="ortadaki-kutu-alani">
+            <div class="kutu-mesaji" id="kutu-metni"></div>
+            <div class="surpriz-kutusu" onclick="yaziEfektiBaslat()" style="font-size: 3rem; cursor: pointer; user-select: none; margin-top: 10px;">🎁</div>
+        </div>
     </div>
 
     <script>
-        // Zamanlama: 3s delay + 2.5s açılış = 5.5s. Yazı 5.7'de başlasın.
+        let tiklamaSayisi = 0; 
+        let evetPaddingX = 40; 
+        let evetPaddingY = 20; 
+        let evetFontSize = 1.8;
+        
+        const baslikMetni = "Shall We Make Up?";
+        const basariMetni = "I knew you would say yes!\nThank you";
+        const tamMetin = "Can we follow each other again, Zilan?";
+        
+        // Hayır butonunun yazıları
+        const hayirYazilari = [
+            "Are you sure?",
+            "Are you really sure??",
+            "Can you say you are absolutely sure?",
+            "Please think about it once more!",
+            "I'll be very sad if you say no...",
+            "I'll be really sad...",
+            "I'll be very, very sad...",
+            "Okay fine, I won't ask anymore..."
+        ];
+
+        // Perde tamamen açıldıktan sonra ana başlık başlasın
         window.onload = function() {
             setTimeout(() => {
-                harfHarfYaz("ana-baslik", "Shall We Make Up?", 70);
+                harfHarfYaz("ana-baslik", baslikMetni, 70);
             }, 5700);
         };
 
-        // ... (Diğer fonksiyonların aynen kalıyor)
-        let tiklamaSayisi = 0; let evetPaddingX = 40; let evetPaddingY = 20; let evetFontSize = 1.8;
-        
         function harfHarfYaz(elementId, metin, hiz, callback) {
             const element = document.getElementById(elementId);
             if(!element) return;
-            element.textContent = ""; let i = 0;
+            element.textContent = ""; 
+            let i = 0;
             function yaz() {
-                if (i < metin.length) { element.textContent += metin.charAt(i); i++; setTimeout(yaz, hiz); }
-                else if (callback) callback();
+                if (i < metin.length) { 
+                    element.textContent += metin.charAt(i); 
+                    i++; 
+                    setTimeout(yaz, hiz); 
+                } else if (callback) {
+                    callback();
+                }
             }
             yaz();
         }
@@ -171,30 +199,86 @@
 
         function yaziEfektiBaslat() {
             const kutuMetni = document.getElementById('kutu-metni');
-            if (kutuMetni.style.display === 'block') { kutuMetni.style.display = 'none'; return; }
+            if (kutuMetni.style.display === 'block') { 
+                kutuMetni.style.display = 'none'; 
+                kutuMetni.textContent = "";
+                return; 
+            }
             kutuMetni.style.display = 'block';
-            harfHarfYaz("kutu-metni", "Can we follow each other again, Zilan?", 50);
+            harfHarfYaz("kutu-metni", tamMetin, 50);
+        }
+
+        function hayirKacir() {
+            const hayirButon = document.getElementById('btn-hayir');
+            const evetButon = document.getElementById('btn-evet');
+            
+            if (tiklamaSayisi >= hayirYazilari.length) return;
+
+            hayirButon.style.position = 'fixed';
+            const evetRect = evetButon.getBoundingClientRect();
+            let x, y, kesisiyorMu;
+
+            do {
+                x = Math.random() * (window.innerWidth - hayirButon.clientWidth - 40) + 20;
+                y = Math.random() * (window.innerHeight - hayirButon.clientHeight - 40) + 20;
+
+                kesisiyorMu = (
+                    x < evetRect.right + 60 &&
+                    x + hayirButon.clientWidth > evetRect.left - 60 &&
+                    y < evetRect.bottom + 60 &&
+                    y + hayirButon.clientHeight > evetRect.top - 60
+                );
+            } while (kesisiyorMu);
+
+            hayirButon.style.left = x + "px";
+            hayirButon.style.top = y + "px";
         }
 
         function hayirTiklandi() {
-            tiklamaSayisi++; const evetButon = document.getElementById('btn-evet');
+            tiklamaSayisi++; 
+            const anaGif = document.getElementById('ana-animasyon');
+            const evetButon = document.getElementById('btn-evet');
             const hayirButon = document.getElementById('btn-hayir');
-            
+
+            if (tiklamaSayisi > hayirYazilari.length) {
+                hayirButon.classList.add('hidden');
+                evetButon.classList.add('full-screen-btn');
+                return;
+            }
+
+            if (tiklamaSayisi % 2 !== 0) {
+                anaGif.src = "%C3%87%C3%B6p%20kutusu.gif";
+            } else {
+                anaGif.src = "%C4%B0kinci%20%C3%87%C3%B6p%20kutusu.gif";
+            }
+
             evetPaddingX += 35; evetPaddingY += 18; evetFontSize += 0.45;
             evetButon.style.padding = evetPaddingY + "px " + evetPaddingX + "px";
             evetButon.style.fontSize = evetFontSize + "rem";
 
-            // Kaçırma mantığı...
-            hayirButon.style.position = 'fixed';
-            hayirButon.style.left = Math.random() * (window.innerWidth - 100) + "px";
-            hayirButon.style.top = Math.random() * (window.innerHeight - 50) + "px";
+            harfHarfYaz("btn-hayir", hayirYazilari[tiklamaSayisi - 1], 30);
+            hayirKacir();
         }
 
         function evetTiklandi() {
             document.getElementById('soru-ekrani').classList.add('hidden');
             document.getElementById('basari-ekrani').classList.remove('hidden');
-            harfHarfYaz("basari-baslik", "I knew you would say yes!\nThank you", 60);
+            document.body.style.backgroundColor = "#e8f8f5";
+            
+            harfHarfYaz("basari-baslik", basariMetni, 60);
+
+            // Müzik çalma mekanizması
+            const muzik = document.getElementById('arkaPlanMuzik');
+            muzik.play().catch(error => {
+                console.log("Müzik engellendi: ", error);
+            });
+
+            setTimeout(() => {
+                muzik.pause();
+                muzik.currentTime = 0;
+            }, 15000);
         }
     </script>
 </body>
 </html>
+
