@@ -35,39 +35,61 @@
             100% { width: 120px; height: 120px; opacity: 0; }
         }
 
-        /* GERÇEKÇİ KADİFE PERDE SİSTEMİ */
-        .perde-kutusu {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 99999; pointer-events: none; display: flex;
+        /* --- YENİ RETRO MEKTUP (LETTER FOR YOU) GİRİŞ SİSTEMİ --- */
+        #mektup-ekrani {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #fcf5ef;
+            /* Piksel kalplerle süslenmiş arka plan deseni */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23f25c74' opacity='0.35'%3E%3Cpath d='M12 10h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3Cpath d='M72 40h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3Cpath d='M132 20h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3Cpath d='M32 90h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3Cpath d='M102 110h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3Cpath d='M142 85h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3Cpath d='M62 135h2v1h-2zm3 0h2v1h-2zm-4 1h8v1h-8zm0 1h8v1h-8zm1 1h6v1h-6zm1 1h4v1h-4zm1 1h2v1h-2z'/%3E%3C/g%3E%3C/svg%3E");
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            /* İstediğin retro piksel parmak (hand pointer) efekti imleci */
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M12 2h2v4h-2V2zm4 4h2v6h-2V6zm4 2h2v4h-2V8zm4 2h2v4h-2v-4z' fill='%23000'/%3E%3Cpath d='M14 4V2h-2v2h2zm4 4V6h-2v2h2zm4 2V8h-2v2h2zm4 2v-2h-2v2h2zm2 6v-4h-2v4h2zm-2 2v-2h-2v2h2zm-4 2v-2h-2v2h2zm-4-2v2h-2v-2h2zm-4-2v2H6v-2h2zm-2-4v4H4v-4h2zm2-2v2H6v-2h2zm2-10v10H8V6h2zm2-4v4h-2V2h2z' fill='%23000'/%3E%3Cpath d='M12 6h2v10h-2V6zm2-4h2v14h-2V2zm2 4h2v10h-2V6zm2 2h2v8h-2V8zm2 2h2v6h-2v-6zm2 4h2v2h-2v-2z' fill='%23fff'/%3E%3C/svg%3E") 12 2, pointer !important;
         }
 
-        .perde-kanat {
-            width: 50vw; height: 100vh;
-            background: linear-gradient(90deg, 
-                #4a0000 0%, #8b0000 20%, #4a0000 40%, 
-                #8b0000 60%, #5c0000 80%, #2a0000 100%);
-            box-shadow: inset 0 0 80px rgba(0,0,0,0.8);
+        .mektup-kutusu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            transition: transform 0.3s ease;
         }
 
-        .sol-perde {
-            transform-origin: left center;
-            animation: solPerdeAcilma 2.5s cubic-bezier(0.4, 0, 0.2, 1) 3s forwards;
+        .mektup-kutusu:hover {
+            transform: scale(1.05);
         }
 
-        .sag-perde {
-            transform-origin: right center;
-            animation: sagPerdeAcilma 2.5s cubic-bezier(0.4, 0, 0.2, 1) 3s forwards;
+        .pixel-mektup {
+            width: 160px;
+            height: 110px;
+            filter: drop-shadow(0 6px 0 rgba(0,0,0,0.1));
+            animation: mektupYuzme 3s ease-in-out infinite;
         }
 
-        @keyframes solPerdeAcilma {
-            0% { transform: scaleX(1); opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0; }
+        @keyframes mektupYuzme {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
-        @keyframes sagPerdeAcilma {
-            0% { transform: scaleX(1); opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0; }
+        .mektup-yazi {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #d63031;
+            letter-spacing: 1px;
+            user-select: none;
+            text-shadow: 1px 1px 0px white;
         }
+        /* ------------------------------------------------ */
 
         .container { max-width: 600px; padding: 20px; z-index: 10; }
 
@@ -94,7 +116,6 @@
         #btn-hayir {
             background-color: #e74c3c; color: white; padding: 10px 20px; font-size: 1rem;
             max-width: 300px; line-height: 1.4; z-index: 30;
-            /* Videodaki gibi akıcı kayarak kaçması için transition ekledik */
             transition: left 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), padding 0.2s ease, font-size 0.2s ease;
         }
 
@@ -121,9 +142,22 @@
 </head>
 <body>
 
-    <div class="perde-kutusu">
-        <div class="perde-kanat sol-perde"></div>
-        <div class="perde-kanat sag-perde"></div>
+    <div id="mektup-ekrani">
+        <div class="mektup-kutusu" onclick="mektupAc()">
+            <div class="pixel-mektup">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 160 110" style="shape-rendering: crispEdges;">
+                    <rect x="4" y="4" width="152" height="102" fill="#fbe3db" stroke="#ba6b5c" stroke-width="4" />
+                    <path d="M 4 4 L 80 58 L 156 4" stroke="#ba6b5c" stroke-width="4" fill="none" />
+                    <path d="M 4 106 L 55 65" stroke="#ba6b5c" stroke-width="4" fill="none" />
+                    <path d="M 156 106 L 105 65" stroke="#ba6b5c" stroke-width="4" fill="none" />
+                    <g transform="translate(68, 42)">
+                        <path d="M3 0h4v2H3zm8 0h4v2h-4zM1 2h16v2H1zm0 2h16v2H1zm2 2h14v2H3zm2 2h10v2H5zm2 2h6v2H7zm2 2h2v2H9z" fill="#d63031" />
+                        <rect x="4" y="3" width="2" height="2" fill="#ff7675" />
+                    </g>
+                </svg>
+            </div>
+            <div class="mektup-yazi">♡ Letter For You ♡</div>
+        </div>
     </div>
 
     <div id="soru-ekrani" class="container">
@@ -166,10 +200,23 @@
         ];
 
         window.onload = function() {
-            setTimeout(() => {
-                harfHarfYaz("ana-baslik", baslikMetni, 70);
-            }, 5700);
+            // Yazı artık mektup açılınca dinamik olarak başlayacak
         };
+
+        // Yeni eklenen mektup açma fonksiyonu
+        function mektupAc() {
+            const mektupEkrani = document.getElementById('mektup-ekrani');
+            mektupEkrani.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            mektupEkrani.style.opacity = '0';
+            mektupEkrani.style.transform = 'scale(1.1)';
+            mektupEkrani.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                mektupEkrani.classList.add('hidden');
+                // Mektup açıldığı an başlık harf harf yazılmaya başlar!
+                harfHarfYaz("ana-baslik", baslikMetni, 70);
+            }, 800);
+        }
 
         function harfHarfYaz(elementId, metin, hiz, callback) {
             const element = document.getElementById(elementId);
@@ -281,12 +328,10 @@
                 let x, y, kesisiyorMu;
                 let denemeSayisi = 0;
 
-                // "Evet" butonunun tam üzerine gitmesini kesinlikle engelleyen döngü
                 do {
                     x = Math.random() * (window.innerWidth - hayirButonEl.clientWidth - 40) + 20;
                     y = Math.random() * (window.innerHeight - hayirButonEl.clientHeight - 40) + 20;
 
-                    // Evet butonu ile çakışma (veya çok yaklaşma) kontrolü
                     kesisiyorMu = (
                         x < evetRect.right + 60 &&
                         x + hayirButonEl.clientWidth > evetRect.left - 60 &&
@@ -303,19 +348,16 @@
             }
         }
 
-        // Fare yaklaştığında veya mobilde parmak dokunduğunda kaçırma tetikleyicileri
         hayirButonEl.addEventListener('mouseover', hoverKacis);
         hayirButonEl.addEventListener('touchstart', hoverKacis, { passive: false });
 
-        // Kullanıcı çok hızlı basarsa click olayını havada yakalayıp 4 kaçış bitmeden eski kodunun çalışmasını kilitler.
         hayirButonEl.addEventListener('click', function(e) {
             if (hoverEscapeCount < 4) {
                 e.preventDefault();
                 e.stopPropagation();
                 hoverKacis(e);
             }
-        }, true); // 'true' (capturing phase) sayesinde eski click fonksiyonundan daha önce çalışır.
+        }, true);
     </script>
 </body>
 </html>
-
