@@ -94,6 +94,8 @@
         #btn-hayir {
             background-color: #e74c3c; color: white; padding: 10px 20px; font-size: 1rem;
             max-width: 300px; line-height: 1.4; z-index: 30;
+            /* Videodaki gibi akıcı kayarak kaçması için transition ekledik */
+            transition: left 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), padding 0.2s ease, font-size 0.2s ease;
         }
 
         .full-screen-btn {
@@ -261,6 +263,59 @@
             document.body.style.backgroundColor = "#e8f8f5";
             harfHarfYaz("basari-baslik", basariMetni, 60);
         }
+
+        // --- ENTEGRE EDİLEN 4 KEZ KAÇIŞ SİSTEMİ (Orijinal koda asla zarar vermez) ---
+        let hoverEscapeCount = 0;
+        const hayirButonEl = document.getElementById('btn-hayir');
+        const evetButonEl = document.getElementById('btn-evet');
+
+        function hoverKacis(e) {
+            if (hoverEscapeCount < 4) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                hayirButonEl.style.position = 'fixed';
+                const evetRect = evetButonEl.getBoundingClientRect();
+                let x, y, kesisiyorMu;
+                let denemeSayisi = 0;
+
+                // "Evet" butonunun tam üzerine gitmesini kesinlikle engelleyen döngü
+                do {
+                    x = Math.random() * (window.innerWidth - hayirButonEl.clientWidth - 40) + 20;
+                    y = Math.random() * (window.innerHeight - hayirButonEl.clientHeight - 40) + 20;
+
+                    // Evet butonu ile çakışma (veya çok yaklaşma) kontrolü
+                    kesisiyorMu = (
+                        x < evetRect.right + 60 &&
+                        x + hayirButonEl.clientWidth > evetRect.left - 60 &&
+                        y < evetRect.bottom + 60 &&
+                        y + hayirButonEl.clientHeight > evetRect.top - 60
+                    );
+                    denemeSayisi++;
+                } while (kesisiyorMu && denemeSayisi < 150);
+
+                hayirButonEl.style.left = x + "px";
+                hayirButonEl.style.top = y + "px";
+                
+                hoverEscapeCount++;
+            }
+        }
+
+        // Fare yaklaştığında veya mobilde parmak dokunduğunda kaçırma tetikleyicileri
+        hayirButonEl.addEventListener('mouseover', hoverKacis);
+        hayirButonEl.addEventListener('touchstart', hoverKacis, { passive: false });
+
+        // Kullanıcı çok hızlı basarsa click olayını havada yakalayıp 4 kaçış bitmeden eski kodunun çalışmasını kilitler.
+        hayirButonEl.addEventListener('click', function(e) {
+            if (hoverEscapeCount < 4) {
+                e.preventDefault();
+                e.stopPropagation();
+                hoverKacis(e);
+            }
+        }, true); // 'true' (capturing phase) sayesinde eski click fonksiyonundan daha önce çalışır.
     </script>
 </body>
 </html>
+
